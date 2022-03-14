@@ -7,6 +7,7 @@ export default class Player {
     direction;
     animationLoop;
     animationCount;
+    animationSpeed;
 
     constructor(x, y) {
         this.x = x;
@@ -17,6 +18,10 @@ export default class Player {
         this.direction = "left";
         this.animationLoop = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1];
         this.animationCount = 0;
+        // Arbitary number controlling the speed of animation
+        // at 144fps, the animation plays too fast
+        // TODO add frame independent animations
+        this.animationSpeed = 0.25;
 
         window.addEventListener('keydown', (key) => {
             if (key.key === 'w') {
@@ -130,9 +135,7 @@ export default class Player {
             } 
         }
 
-
-        console.log(this.animationCount);
-        this.animationCount = (this.animationCount + 0.25) % this.animationLoop.length;
+        this.animationCount = (this.animationCount + this.animationSpeed) % this.animationLoop.length;
     }
 
     // This will wrap the player around if they go outside the canvas border.

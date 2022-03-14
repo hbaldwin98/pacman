@@ -1,12 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    font-family: 'Press Start 2P', sans-serif;
+    text-transform:uppercase;
+    text-align: center;
+}
+
 body {
     display: flex;
     flex-direction:column;
     height: 90vh;
     justify-content: center;
     align-items: center;
-    background-color: rgb(181, 176, 255);
+    background-color: black;
+    color: white;
+}
+
+small {
+    font-size: 12px;
+    margin-top: 2em;
+}
+
+small a {
+    text-decoration: none;
+    color: rgba(121, 204, 252, 0.507);
+}
+
+small a:hover {
+    color: rgba(121, 204, 252, 1);
 }
 
 canvas {
-    border: 1px solid black;
+    box-shadow: 0 0 25px rgb(121, 204, 252);
+    border-radius: 30px;
+    border: 1px solid transparent;
 }
