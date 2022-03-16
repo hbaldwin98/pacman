@@ -1,21 +1,25 @@
 export default class Player {
-    x;
-    y;
+    position;
     radius;
-    velX;
-    velY;
+    velocity;
     direction;
     animationLoop;
     animationCount;
     animationSpeed;
     keys;
+    score;
+    lives;
 
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.radius = 7.6;
-        this.velX = 0;
-        this.velY = 0;
+    constructor(x, y, radius) {
+        this.position = {
+            x: x,
+            y: y
+        }
+        this.radius = radius;
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
         this.animationLoop = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1];
         this.animationCount = 0;
         // Arbitary number controlling the speed of animation
@@ -29,6 +33,8 @@ export default class Player {
             d: false
         }
         this.lastKey = '';
+        this.score = 0;
+        this.lives = 3;
 
         window.addEventListener('keydown', (key) => {
             if (key.key === 'w') {
@@ -66,93 +72,109 @@ export default class Player {
     }
 
 
-
-    update(walls) {
+    update(walls, pellets) {
         if (this.keys.w && this.lastKey === 'w') {
             for (let i = 0; i < walls.length; i++) {
                 const wall = walls[i];
-                this.velY = -1;
-                if (this.playerWallCollision(wall)) {
-                    this.velY = 0;
+                this.velocity.y = -1;
+                if (this.playerTileCollision(wall)) {
+                    this.velocity.y = 0;
                     break;
                 } else {
-                    this.velY = -1;
+                    this.velocity.y = -1;
                 }
             }
         } else if (this.keys.s && this.lastKey === 's') {
             for (let i = 0; i < walls.length; i++) {
                 const wall = walls[i];
-                this.velY = 1;
-                if (this.playerWallCollision(wall)) {
-                    this.velY = 0;
+                this.velocity.y = 1;
+                if (this.playerTileCollision(wall)) {
+                    this.velocity.y = 0;
                     break;
                 } else {
-                    this.velY = 1;
+                    this.velocity.y = 1;
                 }
             }
         } else if (this.keys.a && this.lastKey === 'a') {
             for (let i = 0; i < walls.length; i++) {
                 const wall = walls[i];
-                this.velX = -1;
-                if (this.playerWallCollision(wall)) {
-                    this.velX = 0;
+                this.velocity.x = -1;
+                if (this.playerTileCollision(wall)) {
+                    this.velocity.x = 0;
                     break;
                 } else {
-                    this.velX = -1;
+                    this.velocity.x = -1;
                 }
             }
         } else if (this.keys.d && this.lastKey === 'd') {
             for (let i = 0; i < walls.length; i++) {
                 const wall = walls[i];
-                this.velX = 1;
-                if (this.playerWallCollision(wall)) {
-                    this.velX = 0;
+                this.velocity.x = 1;
+                if (this.playerTileCollision(wall)) {
+                    this.velocity.x = 0;
                     break;
                 } else {
-                    this.velX = 1;
+                    this.velocity.x = 1;
                 }
             }
         }
 
+        pellets.forEach((pellet, idx) => {
+            if (this.playerPelletCollision(pellet)) {
+                pellets.splice(idx, 1);
+                this.score += 10;
+            }    
+        })
+
+
         if (!this.isWallColliding(walls)) {
-            this.x += this.velX;
-            this.y += this.velY;
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
         }
     }
 
-    playerWallCollision(wall) {
-        if (this.y - this.radius + this.velY <= wall.y + wall.height &&
-            this.x + this.radius + this.velX >= wall.x &&
-            this.y + this.radius + this.velY >= wall.y &&
-            this.x - this.radius + this.velX <= wall.x + wall.width) {
+    playerPelletCollision(pellet) {
+        if (this.position.y - this.radius <= pellet.y + pellet.radius &&
+            this.position.x + this.radius >= pellet.x &&
+            this.position.y + this.radius >= pellet.y &&
+            this.position.x - this.radius <= pellet.x + pellet.radius) {
+            return true;
+        }
+    }
+
+    playerTileCollision(wall) {
+        if (this.position.y - this.radius + this.velocity.y <= wall.y + wall.height &&
+            this.position.x + this.radius + this.velocity.x >= wall.x &&
+            this.position.y + this.radius + this.velocity.y >= wall.y &&
+            this.position.x - this.radius + this.velocity.x <= wall.x + wall.width) {
             return true;
         }
     }
 
     // This will wrap the player around if they go outside the canvas border.
     checkBorderPosition(canvas) {
-        if ((this.x) > canvas.width - 2) {
-            this.x = 1;
+        if ((this.position.x) > canvas.width - 2) {
+            this.position.x = 1;
         }
 
-        else if ((this.x) <= 0) {
-            this.x = canvas.width - 1;
+        else if ((this.position.x) <= 0) {
+            this.position.x = canvas.width - 1;
         }
 
-        if ((this.y) > canvas.height - 2) {
-            this.y = 1;
+        if ((this.position.y) > canvas.height - 2) {
+            this.position.y = 1;
         }
 
-        else if ((this.y) <= 0) {
-            this.y = canvas.height - 1;
+        else if ((this.position.y) <= 0) {
+            this.position.y = canvas.height - 1;
         }
     }
 
     isWallColliding(walls) {
         walls.forEach(wall => {
-            if (this.playerWallCollision(wall)) {
-                this.velX = 0;
-                this.velY = 0;
+            if (this.playerTileCollision(wall)) {
+                this.velocity.x = 0;
+                this.velocity.y = 0;
                 return true;
             }
         })
@@ -164,88 +186,51 @@ export default class Player {
         ctx.beginPath();
         ctx.fillStyle = "yellow";
         let animationNum = Math.floor(this.animationCount)
-        if (this.velX === 1) {
+        if (this.velocity.x === 1) {
             if (this.animationLoop[animationNum] === 0) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI / 6, -Math.PI / 6, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI / 6, -Math.PI / 6, false);
             } else if (this.animationLoop[animationNum] === 1) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI / 12, -Math.PI / 12, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill();
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI / 12, -Math.PI / 12, false);
             } else if (this.animationLoop[animationNum] === 2) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill();
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
             }
-        } else if (this.velX === -1) {
+        } else if (this.velocity.x === -1) {
             if (this.animationLoop[animationNum] === 0) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI / 1.2), (-Math.PI / 1.2), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI / 1.2), (-Math.PI / 1.2), true);
             } else if (this.animationLoop[animationNum] === 1) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI / 1.1), (-Math.PI / 1.1), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill();
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI / 1.1), (-Math.PI / 1.1), true);
             } else if (this.animationLoop[animationNum] === 2) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill();
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
             }
-        } else if (this.velY === -1) {
+        } else if (this.velocity.y === -1) {
             if (this.animationLoop[animationNum] === 0) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI * 1.3), (-Math.PI * 0.3), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI * 1.3), (-Math.PI * 0.3), true);
             }
             else if (this.animationLoop[animationNum] === 1) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI * 1.4), (-Math.PI * 0.4), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI * 1.4), (-Math.PI * 0.4), true);
             }
             else if (this.animationLoop[animationNum] === 2) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
             }
-        } else if (this.velY === 1) {
+        } else if (this.velocity.y === 1) {
             if (this.animationLoop[animationNum] === 0) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI * 0.3), (-Math.PI * 1.3), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI * 0.3), (-Math.PI * 1.3), true);
             }
             else if (this.animationLoop[animationNum] === 1) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, (Math.PI * 0.4), (-Math.PI * 1.4), true);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, (Math.PI * 0.4), (-Math.PI * 1.4), true);
             }
             else if (this.animationLoop[animationNum] === 2) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
-                ctx.lineTo(this.x, this.y);
-                ctx.fill()
+                ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
             }
         } else {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
-            ctx.lineTo(this.x, this.y);
-            ctx.fill()
+            ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
         }
+
+        ctx.lineTo(this.position.x, this.position.y);
+        ctx.fill()
 
         this.animationCount = (this.animationCount + this.animationSpeed) % this.animationLoop.length;
     }
-
 
 
 

@@ -1,7 +1,6 @@
 import Player from './modules/player.js';
-let canvas = document.querySelector('canvas');
-let ctx = canvas.getContext('2d')
-let player = new Player(232, 472);
+import Pellet from './modules/pellet.js';
+import Wall from './modules/wall.js';
 
 let map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -26,47 +25,36 @@ let map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'tl', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'tr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 'vt', 0, 'hs', 'hr', 'hr', 'hr', 'he', 0, 'vt', 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 'vr', 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 'vb', 0, 'hs', 'hr', 'hct', 'hr', 'he', 0, 'vb', 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 0, 0, 0, 0, 'vr', 0, 0, 0, 0, 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 'hs', 'hr', 'he', 0, 'vb', 0, 'hs', 'hr', 'he', 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 2, 'hs', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'he', 2, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'bl', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr', 'br', 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-class Wall {
-    x;
-    y;
-    width;
-    height;
 
-    constructor(x, y, pixelSize) {
-        this.x = x;
-        this.y = y;
-        this.width = pixelSize;
-        this.height = pixelSize;
-    }
-
-    draw() {
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-}
+let canvas = document.querySelector('canvas');
+export let ctx = canvas.getContext('2d')
+let player;
 let walls = [];
+let pellets = [];
 
 map.forEach((row, ydx) => {
     row.forEach((tile, xdx) => {
-        if (tile === 1) {
-            let pixelSize = canvas.height / map.length;
-            walls.push(new Wall(xdx * pixelSize, ydx * pixelSize, pixelSize));
+        let pixelSize = canvas.height / map.length;
+        if (tile === 1 || typeof tile === "string") {
+            walls.push(new Wall(xdx * pixelSize, ydx * pixelSize, pixelSize, tile));
+        } else if (tile === 2) {
+            pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 8));
+        } else if (tile === 3) {
+            player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.181818)
         }
     })
 })
@@ -76,17 +64,32 @@ function drawCanvas() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     walls.forEach(wall => {
-        wall.draw();
+        wall.draw(ctx);
+    })
+
+    pellets.forEach(pellet => {
+        pellet.draw(ctx);
     })
 }
 
 function update() {
-    drawCanvas();
-    player.checkBorderPosition(canvas);
-    player.drawPlayer(ctx);
-    player.update(walls);
-    // requestAnimationFrame(update);
+    if (pellets.length > 0) {
+        drawCanvas();
+        player.checkBorderPosition(canvas);
+        player.drawPlayer(ctx);
+        player.update(walls, pellets);
+
+        requestAnimationFrame(update);
+    } else {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = '75px "Press Start 2P"';
+        ctx.fillStyle = "Blue";
+        ctx.fillText("YOU WIN", 15, 300);
+    }
+
 }
 
-setInterval(update, 16.6);
-// update();
+// setInterval(update, 16.6);
+update();
