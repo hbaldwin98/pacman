@@ -120,12 +120,11 @@ export default class Player {
         }
 
         pellets.forEach((pellet, idx) => {
-            if (this.playerPelletCollision(pellet)) {
+            if (this.playerCircleCollision(pellet)) {
                 pellets.splice(idx, 1);
                 this.score += 10;
             }
         })
-
 
         if (!this.isWallColliding(walls)) {
             this.position.x += this.velocity.x;
@@ -133,17 +132,16 @@ export default class Player {
         }
     }
 
-    playerPelletCollision(pellet) {
-        if (this.position.y - this.radius <= pellet.y + pellet.radius &&
-            this.position.x + this.radius >= pellet.x &&
-            this.position.y + this.radius >= pellet.y &&
-            this.position.x - this.radius <= pellet.x + pellet.radius) {
+    playerCircleCollision(circle) {
+        if (this.position.y - this.radius <= circle.y + circle.radius &&
+            this.position.x + this.radius >= circle.x &&
+            this.position.y + this.radius >= circle.y &&
+            this.position.x - this.radius <= circle.x + circle.radius) {
             return true;
         }
     }
 
     playerTileCollision(wall) {
-
         if (this.position.y - this.radius + this.velocity.y <= wall.y + wall.height &&
             this.position.x + this.radius + this.velocity.x >= wall.x &&
             this.position.y + this.radius + this.velocity.y >= wall.y &&
