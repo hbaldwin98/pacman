@@ -45,3 +45,27 @@ canvas {
     image-rendering:pixelated;                 /* Awesome future-browsers       */
     -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
+
+@media (min-width: 300px) {
+    canvas {
+        width: 300px;
+    }
+}
+
+@media (min-width: 900px) {
+    canvas {
+        width: 420px;
+    }
+}
+
+@media (min-width: 1080px) {
+    canvas {
+        width: 550px;
+    }
+}
+
+@media (min-height: 1080px) {
+    canvas {
+        width: 750px;
+    }
+}

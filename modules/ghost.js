@@ -23,7 +23,7 @@ export default class Ghost {
             x: 0,
             y: 0
         }
-        this.mode = "frightened";
+        this.mode = "chase";
     }
 
     // !! I have immense distaste for this rat king of code below
@@ -339,5 +339,23 @@ export default class Ghost {
         ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
         ctx.lineTo(this.position.x, this.position.y);
         ctx.fill();
+    }
+
+    checkBorderPosition(canvas) {
+        if ((this.position.x) > canvas.width - 2) {
+            this.position.x = 1;
+        }
+
+        else if ((this.position.x) <= 0) {
+            this.position.x = canvas.width - 1;
+        }
+
+        if ((this.position.y) > canvas.height - 2) {
+            this.position.y = 1;
+        }
+
+        else if ((this.position.y) <= 0) {
+            this.position.y = canvas.height - 1;
+        }
     }
 }

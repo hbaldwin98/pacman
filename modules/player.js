@@ -230,7 +230,4 @@ export default class Player {
 
         this.animationCount = (this.animationCount + this.animationSpeed) % this.animationLoop.length;
     }
-
-
-
 }
