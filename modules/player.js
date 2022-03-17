@@ -123,7 +123,7 @@ export default class Player {
             if (this.playerPelletCollision(pellet)) {
                 pellets.splice(idx, 1);
                 this.score += 10;
-            }    
+            }
         })
 
 
@@ -143,6 +143,7 @@ export default class Player {
     }
 
     playerTileCollision(wall) {
+
         if (this.position.y - this.radius + this.velocity.y <= wall.y + wall.height &&
             this.position.x + this.radius + this.velocity.x >= wall.x &&
             this.position.y + this.radius + this.velocity.y >= wall.y &&

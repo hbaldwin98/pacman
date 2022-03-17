@@ -1,6 +1,7 @@
 import Player from './modules/player.js';
 import Pellet from './modules/pellet.js';
 import Wall from './modules/wall.js';
+import Ghost from './modules/ghost.js';
 
 let map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0   , 0   , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0   , 0   , 0, 0, 0, 0, 0, 0, 0],
@@ -26,7 +27,7 @@ let map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0   , 0   , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0   , 0   , 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0   , 0   , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0   , 0   , 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 'tl', 'hr', 'hr', 'hr', 'hr', 'hr', 'hr' , 'hr', 'hr', 'hr', 'hr', 'hr', 'tr', 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0   , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0   , 'vr', 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0   , 0   , 0   , 0   , 0   , 4    , 0   , 0   , 0   , 0   , 0   , 'vr', 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0   , 'vt', 0   , 'hs', 'hr', 'hr' , 'hr', 'he', 0   , 'vt', 0   , 'vr', 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0   , 'vr', 0   , 0   , 0   , 0    , 0   , 0   , 0   , 'vr', 0   , 'vr', 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 'vr', 0   , 'vb', 0   , 'hs', 'hr', 'hct', 'hr', 'he', 0   , 'vb', 0   , 'vr', 0, 0, 0, 0, 0, 0, 0],
@@ -45,6 +46,7 @@ let map = [
 let canvas = document.querySelector('canvas');
 export let ctx = canvas.getContext('2d')
 let player;
+let ghost;
 let walls = [];
 let pellets = [];
 
@@ -57,6 +59,8 @@ map.forEach((row, ydx) => {
             pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 8));
         } else if (tile === 3) {
             player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.181818)
+        } else if (tile === 4) {
+            ghost = new Ghost(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.181818)
         }
     })
 })
@@ -80,8 +84,10 @@ function update() {
         player.checkBorderPosition(canvas);
         player.drawPlayer(ctx);
         player.update(walls, pellets);
+        ghost.drawGhost(ctx, player);
+        ghost.update(walls,ctx, player);
 
-        requestAnimationFrame(update);
+        // requestAnimationFrame(update);
     } else {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -94,6 +100,6 @@ function update() {
 
 }
 
-// setInterval(update, 16.6);
-update();
+setInterval(update, 16);
+// update();
 ctx.imageSmoothingEnabled = false;
