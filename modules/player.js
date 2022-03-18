@@ -20,7 +20,7 @@ export default class Player {
             x: 0,
             y: 0
         }
-        this.animationLoop = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1];
+        this.animationLoop = [0, 0, 0, 1, 1, 1, 2, 2, 2, 1, 1, 1];
         this.animationCount = 0;
         // Arbitary number controlling the speed of animation
         // at 144fps, the animation plays too fast so this is just a temporary fix
@@ -72,7 +72,7 @@ export default class Player {
     }
 
 
-    update(walls, pellets) {
+    update(walls, pellets, audio) {
         if (this.keys.w && this.lastKey === 'w') {
             for (let i = 0; i < walls.length; i++) {
                 const wall = walls[i];
@@ -121,8 +121,11 @@ export default class Player {
 
         pellets.forEach((pellet, idx) => {
             if (this.playerCircleCollision(pellet)) {
+                const munch1 = audio.munch1.cloneNode().play();
+                const munch2 = audio.munch2.cloneNode();
                 pellets.splice(idx, 1);
                 this.score += 10;
+                setTimeout(() => munch2.play(), 125);
             }
         })
 

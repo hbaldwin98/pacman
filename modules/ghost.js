@@ -5,11 +5,13 @@ export default class Ghost {
     showLines;
     currentDirection;
     targetPosition;
-    mode;
-    MAX_SPEED;
+    state;
+    maxSpeed;
+    scatterLocation;
+    frightenedLocation;
 
     constructor(x, y, radius, debug) {
-        this.MAX_SPEED = 1;
+        this.maxSpeed = 1;
         this.position = {
             x: x,
             y: y
@@ -25,21 +27,21 @@ export default class Ghost {
             x: 0,
             y: 0
         }
-        this.mode = "chase";
+        this.state = "scatter";
+        this.scatterLocation = {
+            x: 100,
+            y: 100
+        }
         
     }
 
     // !! I have immense distaste for this rat king of code below
     // !! It works (for the most part), but it is not pretty...
-    update(walls, ctx, player) {
-        
-        if (this.mode === 'chase') {
+    update(walls, ctx, player, tunnels) {
+        if (this.state === 'chase') {
             this.targetPosition = player.position;
         } else {
-            this.targetPosition = {
-                x: 350,
-                y: 700
-            }
+            this.targetPosition = this.scatterLocation;
         }
 
         // show the lines originating from the ghost pointing to it's current position.
@@ -91,12 +93,11 @@ export default class Ghost {
         // loop through each wall and check if there is a collision
         // between the ghost and the if it were to go 
         // in a certain direction
-        for (let i = 0; i < walls.length; i++) {
-            const wall = walls[i];
+        walls.forEach(wall => {
             if (!collisions.includes('right') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: this.MAX_SPEED,
+                        x: this.maxSpeed,
                         y: 0
                     },
                     wall
@@ -107,7 +108,7 @@ export default class Ghost {
             if (!collisions.includes('left') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: -this.MAX_SPEED,
+                        x: -this.maxSpeed,
                         y: 0
                     },
                     wall
@@ -119,7 +120,7 @@ export default class Ghost {
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: this.MAX_SPEED
+                        y: this.maxSpeed
                     },
                     wall
                 })
@@ -130,20 +131,32 @@ export default class Ghost {
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: -this.MAX_SPEED
+                        y: -this.maxSpeed
                     },
                     wall
                 })
             ) {
                 collisions.push('up');
             }
-        }
+        })
+
+        tunnels.forEach(tunnel => {
+            if (this.ghostTunnelCollision(tunnel) || 
+                this.ghostTunnelCollision(tunnel)) {
+                    if (tunnel.start) {
+                        this.maxSpeed = 0.75;
+                    } else {
+                        this.maxSpeed = 1;
+                    }
+                    
+                }
+                
+        })
         // each variable holds whether a certain direction is colliding or not
         collidesLeft = collisions.includes('left');
         collidesRight = collisions.includes('right');
         collidesUp = collisions.includes('up');
         collidesDown = collisions.includes('down');
-        console.log(collisions);
         // This rats nest of code determines every 7 possible moves for
         // each direction.
         // In the event of choosing a direction to go,
@@ -285,31 +298,30 @@ export default class Ghost {
                 }
             }
         }
-        console.log(this.currentDirection);
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
     }
 
     goUp() {
         this.velocity.x = 0;
-        this.velocity.y = -this.MAX_SPEED;
+        this.velocity.y = -this.maxSpeed;
         this.currentDirection = 'up';
     }
 
     goDown() {
         this.velocity.x = 0;
-        this.velocity.y = this.MAX_SPEED;
+        this.velocity.y = this.maxSpeed;
         this.currentDirection = 'down';
     }
     
     goLeft() {
-        this.velocity.x = -this.MAX_SPEED;
+        this.velocity.x = -this.maxSpeed;
         this.velocity.y = 0;
         this.currentDirection = 'left';
     }
     
     goRight() {
-        this.velocity.x = this.MAX_SPEED;
+        this.velocity.x = this.maxSpeed;
         this.velocity.y = 0;
         this.currentDirection = 'right';
     }
@@ -323,6 +335,16 @@ export default class Ghost {
         }
     }
 
+    ghostTunnelCollision(tunnel) {
+        if (this.position.y - this.radius <= tunnel.y + this.radius &&
+            this.position.x + this.radius >= tunnel.x &&
+            this.position.y + this.radius >= tunnel.y &&
+            this.position.x - this.radius <= tunnel.x + this.radius) {
+            return true;
+        }
+    }
+
+    // is the ghost colliding with ANY wall on the map
     isWallColliding(walls) {
         walls.forEach(wall => {
             if (this.ghostTileCollision(wall)) {
@@ -341,21 +363,31 @@ export default class Ghost {
         ctx.fill();
     }
 
+    // ensures the ghost wraps around the screen inside the tunnel.
     checkBorderPosition(canvas) {
         if ((this.position.x) > canvas.width - 2) {
-            this.position.x = this.MAX_SPEED;
+            this.position.x = this.maxSpeed;
         }
 
         else if ((this.position.x) <= 0) {
-            this.position.x = canvas.width - this.MAX_SPEED;
+            this.position.x = canvas.width - this.maxSpeed;
         }
 
         if ((this.position.y) > canvas.height - 2) {
-            this.position.y = this.MAX_SPEED;
+            this.position.y = this.maxSpeed;
         }
 
         else if ((this.position.y) <= 0) {
-            this.position.y = canvas.height - this.MAX_SPEED;
+            this.position.y = canvas.height - this.maxSpeed;
+        }
+    }
+
+    setGhostState(state) {
+        this.state = state;
+        if (this.currentDirection === 'up' || this.currentDirection === 'down') {
+            this.currentDirection = 'down' ? 'up' : 'down';
+        } else {
+            this.currentDirection = 'right' ? 'left' : 'right';
         }
     }
 }
