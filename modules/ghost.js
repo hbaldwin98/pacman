@@ -6,8 +6,10 @@ export default class Ghost {
     currentDirection;
     targetPosition;
     mode;
+    MAX_SPEED;
 
-    constructor(x, y, radius) {
+    constructor(x, y, radius, debug) {
+        this.MAX_SPEED = 1;
         this.position = {
             x: x,
             y: y
@@ -17,13 +19,14 @@ export default class Ghost {
             x: 0,
             y: 0
         };
-        this.showLines = true;
+        this.showLines = debug;
         this.currentDirection = 'left';
         this.targetPosition = {
             x: 0,
             y: 0
         }
         this.mode = "chase";
+        
     }
 
     // !! I have immense distaste for this rat king of code below
@@ -43,56 +46,57 @@ export default class Ghost {
         if (this.showLines) {
             ctx.beginPath();
             ctx.strokeStyle = "red";
-            ctx.moveTo(this.position.x, this.position.y + this.radius * 2.181818);
+            ctx.moveTo(this.position.x, this.position.y + this.radius * 2.085);
             ctx.lineTo(this.targetPosition.x, this.targetPosition.y);
             ctx.stroke();
             ctx.beginPath();
             ctx.strokeStyle = "red";
-            ctx.moveTo(this.position.x + this.radius * 2.181818, this.position.y);
+            ctx.moveTo(this.position.x + this.radius * 2.085, this.position.y);
             ctx.lineTo(this.targetPosition.x, this.targetPosition.y);
             ctx.stroke();
             ctx.beginPath();
             ctx.strokeStyle = "red";
-            ctx.moveTo(this.position.x, this.position.y - this.radius * 2.181818);
+            ctx.moveTo(this.position.x, this.position.y - this.radius * 2.085);
             ctx.lineTo(this.targetPosition.x, this.targetPosition.y);
             ctx.stroke();
             ctx.beginPath();
             ctx.strokeStyle = "red";
-            ctx.moveTo(this.position.x - this.radius * 2.181818, this.position.y);
+            ctx.moveTo(this.position.x - this.radius * 2.085, this.position.y);
             ctx.lineTo(this.targetPosition.x, this.targetPosition.y);
             ctx.stroke();
         }
 
-        // Math to determine distance between the ghost and the playert
+        // Math to determine distance between the ghost and the player
         // at four different points around the ghost. This is used
         // to calculate movement patterns based on whether one distance is
         // greater than another.
         let xDiff = this.targetPosition.x - this.position.x;
         let yDiff = this.targetPosition.y - this.position.y;
-        let dUp = this.targetPosition.y - (this.position.y - this.radius * 2.181818);
-        let dDown = this.targetPosition.y - (this.position.y + this.radius * 2.181818);
-        let dLeft = this.targetPosition.x - (this.position.x - this.radius * 2.181818);
-        let dRight = this.targetPosition.x - (this.position.x + this.radius * 2.181818);
+        let dUp = this.targetPosition.y - (this.position.y - this.radius);
+        let dDown = this.targetPosition.y - (this.position.y + this.radius);
+        let dLeft = this.targetPosition.x - (this.position.x - this.radius);
+        let dRight = this.targetPosition.x - (this.position.x + this.radius);
         let up = Math.sqrt(xDiff * xDiff + (dUp) * (dUp));
         let left = Math.sqrt((dLeft) * (dLeft) + yDiff * yDiff);
         let right = Math.sqrt((dRight) * (dRight) + yDiff * yDiff);
         let down = Math.sqrt(xDiff * xDiff + (dDown) * (dDown));
 
         let collisions = [];
-        let collidesLeft = collisions.includes('left');
-        let collidesRight = collisions.includes('right');
-        let collidesUp = collisions.includes('up');
-        let collidesDown = collisions.includes('down');
+        
+        let collidesLeft;
+        let collidesRight;
+        let collidesUp;
+        let collidesDown;;
 
         // loop through each wall and check if there is a collision
         // between the ghost and the if it were to go 
         // in a certain direction
         for (let i = 0; i < walls.length; i++) {
             const wall = walls[i];
-            if (!collidesRight &&
+            if (!collisions.includes('right') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: 1,
+                        x: this.MAX_SPEED,
                         y: 0
                     },
                     wall
@@ -100,10 +104,10 @@ export default class Ghost {
             ) {
                 collisions.push('right');
             }
-            if (!collidesLeft &&
+            if (!collisions.includes('left') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: -1,
+                        x: -this.MAX_SPEED,
                         y: 0
                     },
                     wall
@@ -111,22 +115,22 @@ export default class Ghost {
             ) {
                 collisions.push('left');
             }
-            if (!collidesDown &&
+            if (!collisions.includes('down') &&
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: 1
+                        y: this.MAX_SPEED
                     },
                     wall
                 })
             ) {
                 collisions.push('down');
             }
-            if (!collidesUp &&
+            if (!collisions.includes('up') &&
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: -1
+                        y: -this.MAX_SPEED
                     },
                     wall
                 })
@@ -134,13 +138,12 @@ export default class Ghost {
                 collisions.push('up');
             }
         }
-
         // each variable holds whether a certain direction is colliding or not
         collidesLeft = collisions.includes('left');
         collidesRight = collisions.includes('right');
         collidesUp = collisions.includes('up');
         collidesDown = collisions.includes('down');
-
+        console.log(collisions);
         // This rats nest of code determines every 7 possible moves for
         // each direction.
         // In the event of choosing a direction to go,
@@ -282,39 +285,36 @@ export default class Ghost {
                 }
             }
         }
-
         console.log(this.currentDirection);
-
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
     }
 
     goUp() {
         this.velocity.x = 0;
-        this.velocity.y = -1;
+        this.velocity.y = -this.MAX_SPEED;
         this.currentDirection = 'up';
     }
 
     goDown() {
         this.velocity.x = 0;
-        this.velocity.y = 1;
+        this.velocity.y = this.MAX_SPEED;
         this.currentDirection = 'down';
     }
     
     goLeft() {
-        this.velocity.x = -1;
+        this.velocity.x = -this.MAX_SPEED;
         this.velocity.y = 0;
         this.currentDirection = 'left';
     }
     
     goRight() {
-        this.velocity.x = 1;
+        this.velocity.x = this.MAX_SPEED;
         this.velocity.y = 0;
         this.currentDirection = 'right';
     }
 
     ghostTileCollision(details) {
-
         if (this.position.y - this.radius + details.velocity.y <= details.wall.y + details.wall.height &&
             this.position.x + this.radius + details.velocity.x >= details.wall.x &&
             this.position.y + this.radius + details.velocity.y >= details.wall.y &&
@@ -343,19 +343,19 @@ export default class Ghost {
 
     checkBorderPosition(canvas) {
         if ((this.position.x) > canvas.width - 2) {
-            this.position.x = 1;
+            this.position.x = this.MAX_SPEED;
         }
 
         else if ((this.position.x) <= 0) {
-            this.position.x = canvas.width - 1;
+            this.position.x = canvas.width - this.MAX_SPEED;
         }
 
         if ((this.position.y) > canvas.height - 2) {
-            this.position.y = 1;
+            this.position.y = this.MAX_SPEED;
         }
 
         else if ((this.position.y) <= 0) {
-            this.position.y = canvas.height - 1;
+            this.position.y = canvas.height - this.MAX_SPEED;
         }
     }
 }
