@@ -7,7 +7,7 @@ let audio = {
     munch1: new Audio('./sounds/munch_1.wav'),
     munch2: new Audio('./sounds/munch_2.wav')
 }
-let gameState = new GameState(canvas, true);
+let gameState = new GameState(canvas, false);
 let timeStart = Date.now();
 let timeElapsed = timeStart;
 ctx.imageSmoothingEnabled = false;
@@ -39,7 +39,7 @@ function update() {
         gameState.ghosts.forEach(ghost => {
             ghost.checkBorderPosition(canvas);
             ghost.drawGhost(ctx, gameState.player);
-            ghost.update(gameState.walls, ctx, gameState.player, gameState.tunnels);
+            ghost.update(gameState.walls, ctx, gameState.player, gameState.tunnels, gameState.ghosts);
         })
         // requestAnimationFrame(update);
     } else {

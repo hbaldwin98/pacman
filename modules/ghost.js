@@ -1,4 +1,5 @@
 export default class Ghost {
+    ghostName;
     position;
     radius;
     velocity;
@@ -9,8 +10,10 @@ export default class Ghost {
     maxSpeed;
     scatterLocation;
     frightenedLocation;
+    color;
 
-    constructor(x, y, radius, debug) {
+    constructor(ghostName, x, y, radius, debug, canvas) {
+        this.ghostName = ghostName;
         this.maxSpeed = 1;
         this.position = {
             x: x,
@@ -23,27 +26,126 @@ export default class Ghost {
         };
         this.showLines = debug;
         this.currentDirection = 'left';
-        this.targetPosition = {
-            x: 0,
-            y: 0
-        }
         this.state = "scatter";
-        this.scatterLocation = {
-            x: 630,
-            y: 175
+        if (ghostName === 'Blinky') {
+            this.color = "red";
+            this.scatterLocation = {
+                x: 630,
+                y: 175
+            }
+        } else if (ghostName === 'Pinky') {
+            this.color = "pink";
+            this.scatterLocation = {
+                x: 40,
+                y: 175
+            }
+        } else if (ghostName === 'Inky') {
+            this.color = "cyan";
+            this.scatterLocation = {
+                x: 630,
+                y: 850
+            }
+        } else if (ghostName === 'Clyde') {
+            this.color = "orange";
+            this.scatterLocation = {
+                x: 40,
+                y: 850
+            }
         }
-        
+
+    }
+
+
+    setTargetPosition(player, ghosts) {
+        if (this.state === 'chase') {
+            if (this.ghostName === 'Blinky') {
+                this.targetPosition = {
+                    x: player.position.x,
+                    y: player.position.y
+                }
+            } else if (this.ghostName === 'Pinky') {
+                if (player.lastKey === 'w') {
+                    this.targetPosition = {
+                        x: player.position.x,
+                        y: player.position.y - player.radius * 4
+                    }
+                } else if (player.lastKey === 's') {
+                    this.targetPosition = {
+                        x: player.position.x,
+                        y: player.position.y + player.radius * 4
+                    }
+                } else if (player.lastKey === 'd') {
+                    this.targetPosition = {
+                        x: player.position.x + player.radius * 4,
+                        y: player.position.y
+                    }
+                } else {
+                    this.targetPosition = {
+                        x: player.position.x - player.radius * 4,
+                        y: player.position.y
+                    }
+                }
+            } else if (this.ghostName === 'Inky') {
+                ghosts.forEach(ghost => {
+                    if (ghost.ghostName === 'Blinky') {
+                        let diff = this.getXYDistanceFromPlayer(player, ghost);
+
+                        if (player.lastKey === 'w') {
+                            this.targetPosition = {
+                                x: player.position.x - diff.x,
+                                y: player.position.y - (diff.y + player.radius * 4)
+                            }
+                        } else if (player.lastKey === 's') {
+                            this.targetPosition = {
+                                x: player.position.x + diff.x,
+                                y: player.position.y + (diff.y + player.radius * 4)
+                            }
+                        } else if (player.lastKey === 'd') {
+                            this.targetPosition = {
+                                x: player.position.x + (diff.x + player.radius * 4),
+                                y: player.position.y + diff.y
+                            }
+                        } else {
+                            this.targetPosition = {
+                                x: player.position.x - (diff.x + player.radius * 4),
+                                y: player.position.y - diff.y
+                            }
+                        }
+                    }
+                })
+            } else if (this.ghostName === 'Clyde') {
+                if (this.getDistanceFromPlayer(player, this) >= this.radius * 12) {
+                    this.targetPosition = {
+                        x: player.position.x,
+                        y: player.position.y
+                    }
+                } else {
+                    this.targetPosition = this.scatterLocation;
+                }
+            } 
+        } else {
+            this.targetPosition = this.scatterLocation;
+        }
+    }
+
+    getDistanceFromPlayer(player, ghost) {
+        let xDiff = player.position.x - ghost.position.x;
+        let yDiff = player.position.y - ghost.position.y;
+        console.log(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+        return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+    }
+
+    getXYDistanceFromPlayer(player, ghost) {
+        let xDiff = player.position.x - ghost.position.x;
+        let yDiff = player.position.y - ghost.position.y;
+
+        return {x: xDiff, y: yDiff};
     }
 
     // !! I have immense distaste for this rat king of code below
     // !! It works (for the most part), but it is not pretty...
-    update(walls, ctx, player, tunnels) {
-        if (this.state === 'chase') {
-            this.targetPosition = player.position;
-        } else {
-            this.targetPosition = this.scatterLocation;
-        }
-
+    update(walls, ctx, player, tunnels, ghosts) {
+        this.setTargetPosition(player, ghosts);
         // show the lines originating from the ghost pointing to it's current position.
         if (this.showLines) {
             ctx.beginPath();
@@ -84,7 +186,7 @@ export default class Ghost {
         let down = Math.sqrt(xDiff * xDiff + (dDown) * (dDown));
 
         let collisions = [];
-        
+
         let collidesLeft;
         let collidesRight;
         let collidesUp;
@@ -141,16 +243,16 @@ export default class Ghost {
         })
 
         tunnels.forEach(tunnel => {
-            if (this.ghostTunnelCollision(tunnel) || 
+            if (this.ghostTunnelCollision(tunnel) ||
                 this.ghostTunnelCollision(tunnel)) {
-                    if (tunnel.start) {
-                        this.maxSpeed = 0.75;
-                    } else {
-                        this.maxSpeed = 1;
-                    }
-                    
+                if (tunnel.start) {
+                    this.maxSpeed = 0.75;
+                } else {
+                    this.maxSpeed = 1;
                 }
-                
+
+            }
+
         })
         // each variable holds whether a certain direction is colliding or not
         collidesLeft = collisions.includes('left');
@@ -230,9 +332,9 @@ export default class Ghost {
                 }
             }
         } else if (this.currentDirection === 'left') {
-            
+
             if (!collidesLeft && !collidesUp && !collidesDown) {
-                
+
                 if (down >= up && left >= up) {
                     this.goUp();
                 } else if (down >= left && up >= left) {
@@ -258,7 +360,7 @@ export default class Ghost {
                 } else {
                     this.goLeft();
                 }
-             } else if (!collidesLeft && collidesUp && !collidesDown) {
+            } else if (!collidesLeft && collidesUp && !collidesDown) {
                 if (left > down) {
                     this.goDown()
                 } else {
@@ -292,7 +394,7 @@ export default class Ghost {
                 } else {
                     this.goRight();
                 }
-             } else if (!collidesRight && collidesUp && !collidesDown) {
+            } else if (!collidesRight && collidesUp && !collidesDown) {
                 if (right > down) {
                     this.goDown()
                 } else {
@@ -315,13 +417,13 @@ export default class Ghost {
         this.velocity.y = this.maxSpeed;
         this.currentDirection = 'down';
     }
-    
+
     goLeft() {
         this.velocity.x = -this.maxSpeed;
         this.velocity.y = 0;
         this.currentDirection = 'left';
     }
-    
+
     goRight() {
         this.velocity.x = this.maxSpeed;
         this.velocity.y = 0;
@@ -359,7 +461,7 @@ export default class Ghost {
 
     drawGhost(ctx) {
         ctx.beginPath();
-        ctx.fillStyle = "red";
+        ctx.fillStyle = this.color;
         ctx.arc(this.position.x, this.position.y, this.radius, Math.PI * 2, false);
         ctx.lineTo(this.position.x, this.position.y);
         ctx.fill();
@@ -388,7 +490,7 @@ export default class Ghost {
         this.state = state;
         // ! THIS CODE BELOW WILL OCCASIONAL BREAK THE GHOSTS MOVEMENT FOR SOME REASON
         // ! NEED TO FIND A FIX, FOR NOW I AM DISABLING IT.
-        
+
         // if (this.currentDirection === 'up') {
         //     this.goDown();
         // } else {

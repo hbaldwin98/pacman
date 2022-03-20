@@ -33,10 +33,10 @@ export default class GameState {
             [0   , 'vr', 2   , 'hs', 'hc', 'hc', 'he', 2   , 'vt' , 2   , 'hs', 'hc', 'hc', 'hct', 'hc', 'hc', 'he', 2   , 'vt' , 2   , 'hs', 'hc', 'hc', 'he', 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
             [0   , 'bl', 'hc', 'hc', 'hc', 'hc', 'tr', 2   , 'vr' , 'hc', 'hc', 'he', 2   , 'vb' , 2   , 'hs', 'hc', 'hc', 'vr' , 2   , 'tl', 'hc', 'hc', 'hc', 'hc', 'br', 0,  ],
-            [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 0   , 0   , 4    , 0   , 0   , 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
+            [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 0   , 5   , 7    , 6   , 4   , 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 'tl', 'hc', 'hc', 'hc' , 'hc', 'hc', 'tr', 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             ['hc', 'hc', 'hc', 'hc', 'hc', 'hc', 'br', 2   , 'vb' , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 'vb' , 2   , 'bl', 'hc', 'hc', 'hc', 'hc', 'hc', 'hc'],
-            [0   , 0   , 0   , 0   , 0   , -1  , -2  , 2   , 0    , 0   , 'vr', 0   , 4   , 4    , 4   , 0   , 'vr', 0   , 0    , 2   , -2  , -1  , 0   , 0   , 0   , 0   , 0,  ],
+            [0   , 0   , 0   , 0   , 0   , -1  , -2  , 2   , 0    , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 0    , 2   , -2  , -1  , 0   , 0   , 0   , 0   , 0,  ],
             ['hc', 'hc', 'hc', 'hc', 'hc', 'hc', 'tr', 2   , 'vt' , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 'vt' , 2   , 'tl', 'hc', 'hc', 'hc', 'hc', 'hc', 'hc'],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 'bl', 'hc', 'hc', 'hc' , 'hc', 'hc', 'br', 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
@@ -119,7 +119,13 @@ export default class GameState {
                 } else if (tile === 3) {
                     this.pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 4));
                 } else if (tile === 4) {
-                    this.ghosts.push(new Ghost(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode));
+                    this.ghosts.push(new Ghost("Blinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                } else if (tile === 5) {
+                    this.ghosts.push(new Ghost("Pinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                } else if (tile === 6) {
+                    this.ghosts.push(new Ghost("Clyde", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                } else if (tile === 7) {
+                    this.ghosts.push(new Ghost("Inky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
                 } else if (tile === -1) {
                     this.tunnels.push({ x: xdx * pixelSize, y: ydx * pixelSize, start: true });
                 } else if (tile === -2) {
