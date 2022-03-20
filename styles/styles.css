@@ -6,14 +6,14 @@
     text-align: center;
 }
 .header-container {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    height: 3em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    height: 4.5em;
     background-color: darkorange;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid red;
+    border: 0.25em solid red;
     border-radius: 5px;
 }
 h1 {
@@ -22,7 +22,8 @@ h1 {
     border-radius: 5px;
     box-shadow: 0 0 2px black;
     text-indent: 5px;
-    text-shadow: 0 0 5px black;;
+    text-shadow: 0 0 5px black;
+    font-size: 3em;
 }
 
 body {
@@ -60,26 +61,61 @@ canvas {
 
 }
 
-@media (min-width: 300px) {
+
+
+@media (min-height: 300px) and (max-height: 600px) {
     canvas {
         width: 300px;
     }
-}
 
-@media (min-width: 900px) {
-    canvas {
-        width: 420px;
+    .header-container {
+        height: 3em;
+    }
+    h1 {
+        font-size: 2em;
     }
 }
 
-@media (min-width: 1080px) {
+@media (min-height: 600px) and (max-height: 750px) {
     canvas {
-        width: 550px;
+        width: 340px;
+    }
+
+    .header-container {
+        height: 3em;
+    }
+    h1 {
+        font-size: 2em;
+    }
+}
+
+@media (min-height: 750px) and (max-height: 900px) {
+    canvas {
+        width: 403px;
+    }
+
+    .header-container {
+        height: 3em;
+    }
+    h1 {
+        font-size: 2em;
+    }
+}
+
+@media (min-height: 900px) {
+    canvas {
+        width: 448px;
     }
 }
 
 @media (min-height: 1080px) {
     canvas {
-        width: 750px;
+        width: 560px;
+    }
+}
+
+@media (min-height: 1440px) {
+    canvas {
+        width: 784px;
     }
 }

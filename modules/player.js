@@ -25,7 +25,7 @@ export default class Player {
         // Arbitary number controlling the speed of animation
         // at 144fps, the animation plays too fast so this is just a temporary fix
         // TODO add frame independent animations
-        this.animationSpeed = 0.25;
+        this.animationSpeed = 0.5;
         this.keys = {
             w: false,
             s: false,
@@ -121,8 +121,11 @@ export default class Player {
 
         pellets.forEach((pellet, idx) => {
             if (this.playerCircleCollision(pellet)) {
-                const munch1 = audio.munch1.cloneNode().play();
+                const munch1 = audio.munch1.cloneNode();
+                munch1.volume = 0.5;
                 const munch2 = audio.munch2.cloneNode();
+                munch2.volume = 0.5;
+                munch1.play();
                 pellets.splice(idx, 1);
                 this.score += 10;
                 setTimeout(() => munch2.play(), 125);

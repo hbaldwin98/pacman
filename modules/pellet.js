@@ -11,7 +11,7 @@ export default class Pellet {
 
     draw(ctx) {
         ctx.beginPath();
-        ctx.fillStyle = "tan";
+        ctx.fillStyle = "orange";
         ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
         ctx.fill();
     }

@@ -29,8 +29,8 @@ export default class Ghost {
         }
         this.state = "scatter";
         this.scatterLocation = {
-            x: 100,
-            y: 100
+            x: 630,
+            y: 175
         }
         
     }
@@ -97,7 +97,7 @@ export default class Ghost {
             if (!collisions.includes('right') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: this.maxSpeed,
+                        x: 1,
                         y: 0
                     },
                     wall
@@ -108,7 +108,7 @@ export default class Ghost {
             if (!collisions.includes('left') &&
                 this.ghostTileCollision({
                     velocity: {
-                        x: -this.maxSpeed,
+                        x: -1,
                         y: 0
                     },
                     wall
@@ -120,7 +120,7 @@ export default class Ghost {
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: this.maxSpeed
+                        y: 1
                     },
                     wall
                 })
@@ -131,7 +131,7 @@ export default class Ghost {
                 this.ghostTileCollision({
                     velocity: {
                         x: 0,
-                        y: -this.maxSpeed
+                        y: -1
                     },
                     wall
                 })
@@ -223,14 +223,16 @@ export default class Ghost {
                     this.goDown();
                 }
             } else if (!collidesDown && collidesLeft && !collidesRight) {
-                if (down >= right) {
+                if (down > right) {
                     this.goRight()
                 } else {
                     this.goDown();
                 }
             }
         } else if (this.currentDirection === 'left') {
+            
             if (!collidesLeft && !collidesUp && !collidesDown) {
+                
                 if (down >= up && left >= up) {
                     this.goUp();
                 } else if (down >= left && up >= left) {
@@ -291,7 +293,7 @@ export default class Ghost {
                     this.goRight();
                 }
              } else if (!collidesRight && collidesUp && !collidesDown) {
-                if (right >= down) {
+                if (right > down) {
                     this.goDown()
                 } else {
                     this.goRight();
@@ -384,10 +386,19 @@ export default class Ghost {
 
     setGhostState(state) {
         this.state = state;
-        if (this.currentDirection === 'up' || this.currentDirection === 'down') {
-            this.currentDirection = 'down' ? 'up' : 'down';
-        } else {
-            this.currentDirection = 'right' ? 'left' : 'right';
-        }
+        // ! THIS CODE BELOW WILL OCCASIONAL BREAK THE GHOSTS MOVEMENT FOR SOME REASON
+        // ! NEED TO FIND A FIX, FOR NOW I AM DISABLING IT.
+        
+        // if (this.currentDirection === 'up') {
+        //     this.goDown();
+        // } else {
+        //     this.goUp();
+        // }
+
+        // if (this.currentDirection === 'right') {
+        //     this.goLeft();
+        // } else {
+        //     this.goRight();
+        // }
     }
 }

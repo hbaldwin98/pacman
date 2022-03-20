@@ -28,7 +28,7 @@ export default class GameState {
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 'tl', 'hc', 'hc', 'tr', 2   , 'tl' , 'hc', 'hc', 'tr', 2   , 'vr' , 2   , 'tl', 'hc', 'hc', 'tr' , 2   , 'tl', 'hc', 'hc', 'tr', 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 'vr', 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 'vr', 2   , 'vr' , 2   , 'vr', 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 'vr', 2   , 'vr', 0,  ],
-            [0   , 'vr', 0   , 'bl', 'hc', 'hc', 'br', 2   , 'bl' , 'hc', 'hc', 'br', 2   , 'vb' , 2   , 'bl', 'hc', 'hc', 'br' , 2   , 'bl', 'hc', 'hc', 'br', 0   , 'vr', 0,  ],
+            [0   , 'vr', 3   , 'bl', 'hc', 'hc', 'br', 2   , 'bl' , 'hc', 'hc', 'br', 2   , 'vb' , 2   , 'bl', 'hc', 'hc', 'br' , 2   , 'bl', 'hc', 'hc', 'br', 3   , 'vr', 0,  ],
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 'hs', 'hc', 'hc', 'he', 2   , 'vt' , 2   , 'hs', 'hc', 'hc', 'hct', 'hc', 'hc', 'he', 2   , 'vt' , 2   , 'hs', 'hc', 'hc', 'he', 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
@@ -36,14 +36,14 @@ export default class GameState {
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 0   , 0   , 4    , 0   , 0   , 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 'tl', 'hc', 'hc', 'hc' , 'hc', 'hc', 'tr', 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             ['hc', 'hc', 'hc', 'hc', 'hc', 'hc', 'br', 2   , 'vb' , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 'vb' , 2   , 'bl', 'hc', 'hc', 'hc', 'hc', 'hc', 'hc'],
-            [0   , 0   , 0   , 0   , 0   , -1   , -2   , 2   , 0    , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 0    , 2   , -2   , -1   , 0   , 0   , 0   , 0   , 0,  ],
+            [0   , 0   , 0   , 0   , 0   , -1  , -2  , 2   , 0    , 0   , 'vr', 0   , 4   , 4    , 4   , 0   , 'vr', 0   , 0    , 2   , -2  , -1  , 0   , 0   , 0   , 0   , 0,  ],
             ['hc', 'hc', 'hc', 'hc', 'hc', 'hc', 'tr', 2   , 'vt' , 0   , 'vr', 0   , 0   , 0    , 0   , 0   , 'vr', 0   , 'vt' , 2   , 'tl', 'hc', 'hc', 'hc', 'hc', 'hc', 'hc'],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 'bl', 'hc', 'hc', 'hc' , 'hc', 'hc', 'br', 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             [0   , 0   , 0   , 0   , 0   , 0   , 'vr', 2   , 'vr' , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 'vr' , 2   , 'vr', 0   , 0   , 0   , 0   , 0   , 0,  ],
             [0   , 'tl', 'hc', 'hc', 'hc', 'hc', 'br', 2   , 'vb' , 0   , 'hs', 'hc', 'hc', 'hct', 'hc', 'hc', 'he', 0   , 'vb' , 2   , 'bl', 'hc', 'hc', 'hc', 'hc', 'tr', 0,  ],
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 2    , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
-            [0   , 'vr', 2   , 'hs', 'hc', 'hc', 'tr', 2   , 'hs' , 'hc', 'hc', 'he', 2   , 'vb' , 2   , 'hs', 'hc', 'hc', 'he' , 0   , 'tl', 'hc', 'hc', 'he', 2   , 'vr', 0,  ],
-            [0   , 'vr', 0   , 2   , 2   , 2   , 'vr', 2   , 2    , 2   , 2   , 2   , 2   , 3    , 2   , 2   , 2   , 2   , 2    , 2   , 'vr', 2   , 2   , 2   , 0   , 'vr', 0,  ],
+            [0   , 'vr', 2   , 'hs', 'hc', 'hc', 'tr', 2   , 'hs' , 'hc', 'hc', 'he', 2   , 'vb' , 2   , 'hs', 'hc', 'hc', 'he' , 2   , 'tl', 'hc', 'hc', 'he', 2   , 'vr', 0,  ],
+            [0   , 'vr', 3   , 2   , 2   , 2   , 'vr', 2   , 2    , 2   , 2   , 2   , 2   , 1    , 2   , 2   , 2   , 2   , 2    , 2   , 'vr', 2   , 2   , 2   , 3   , 'vr', 0,  ],
             [0   , 'vr', 'hc', 'hc', 'he', 2   , 'vb', 2   , 'vt' , 2   , 'hs', 'hc', 'hc', 'hct', 'hc', 'hc', 'he', 2   , 'vt' , 2   , 'vb', 2   , 'hs', 'hc', 'hc', 'vr', 0,  ],
             [0   , 'vr', 2   , 2   , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 'vr' , 2   , 2   , 2   , 2   , 2   , 2   , 'vr', 0,  ],
             [0   , 'vr', 2   , 'hs', 'hc', 'hc', 'hc', 'hc', 'hcb', 'hc', 'hc', 'he', 2   , 'vb' , 2   , 'hs', 'hc', 'hc', 'hcb', 'hc', 'hc', 'hc', 'hc', 'he', 2   , 'vr', 0,  ],
@@ -75,32 +75,32 @@ export default class GameState {
         this.ghostState = 0;
         this.ghostStates = [
             {
-            state: 'chase', 
-            time: 7000
+                state: 'chase',
+                time: 7000
             },
             {
-            state: 'scatter', 
-            time: 27000
-            }, 
-            {
-            state: 'chase', 
-            time: 34000
+                state: 'scatter',
+                time: 27000
             },
             {
-            state: 'scatter', 
-            time: 54000
-            }, 
-            {
-            state: 'chase', 
-            time: 59000
+                state: 'chase',
+                time: 34000
             },
             {
-            state: 'scatter', 
-            time: 79000
-            }, 
+                state: 'scatter',
+                time: 54000
+            },
             {
-            state: 'chase', 
-            time: 84000
+                state: 'chase',
+                time: 59000
+            },
+            {
+                state: 'scatter',
+                time: 79000
+            },
+            {
+                state: 'chase',
+                time: 84000
             }]
 
         this.initializeMap(canvas);
@@ -112,16 +112,18 @@ export default class GameState {
                 let pixelSize = canvas.height / this.map.length;
                 if (typeof tile === "string") {
                     this.walls.push(new Wall(xdx * pixelSize, ydx * pixelSize, pixelSize, this.createImage(tile)));
+                } else if (tile === 1) {
+                    this.player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086);
                 } else if (tile === 2) {
                     this.pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 8));
                 } else if (tile === 3) {
-                    this.player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085);
+                    this.pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 4));
                 } else if (tile === 4) {
-                    this.ghosts.push(new Ghost(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085, this.debugMode));
+                    this.ghosts.push(new Ghost(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode));
                 } else if (tile === -1) {
-                    this.tunnels.push({x: xdx * pixelSize, y: ydx * pixelSize, start: true});
+                    this.tunnels.push({ x: xdx * pixelSize, y: ydx * pixelSize, start: true });
                 } else if (tile === -2) {
-                    this.tunnels.push({x: xdx * pixelSize, y: ydx * pixelSize, start: false});
+                    this.tunnels.push({ x: xdx * pixelSize, y: ydx * pixelSize, start: false });
                 }
             })
         })
@@ -130,7 +132,7 @@ export default class GameState {
     createImage(link) {
         let sprite = new Image();
         sprite.src = this.images[link];
-    
+
         return sprite;
     }
 
@@ -138,8 +140,8 @@ export default class GameState {
         if (this.ghostStates[this.ghostState].time <= timeElapsed) {
             this.ghosts.forEach(ghost => {
                 ghost.setGhostState(this.ghostStates[this.ghostState].state);
-                 if (this.ghostState < this.ghostStates.length-1) this.ghostState++;
             });
+            if (this.ghostState < this.ghostStates.length - 1) this.ghostState++;
         }
     }
 }

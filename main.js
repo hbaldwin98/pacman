@@ -41,7 +41,6 @@ function update() {
             ghost.drawGhost(ctx, gameState.player);
             ghost.update(gameState.walls, ctx, gameState.player, gameState.tunnels);
         })
-
         // requestAnimationFrame(update);
     } else {
         ctx.fillStyle = "black";
@@ -55,5 +54,6 @@ function update() {
 
 }
 
-setInterval(update, 11);
+setInterval(update, 12);
 // update();
+
