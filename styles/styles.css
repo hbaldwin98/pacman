@@ -1,121 +1,123 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 * {
-    font-family: 'Press Start 2P', sans-serif;
-    text-transform:uppercase;
-    text-align: center;
+  font-family: 'Press Start 2P', sans-serif;
+  text-transform: uppercase;
+  text-align: center;
 }
+
 .header-container {
-    margin-top: 2em;
-    margin-bottom: 2em;
-    height: 4.5em;
-    background-color: darkorange;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0.25em solid red;
-    border-radius: 5px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  height: 4.5em;
+  background-color: darkorange;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.25em solid red;
+  border-radius: 5px;
 }
+
 h1 {
-    padding: 0.25em;
-    border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0 0 2px black;
-    text-indent: 5px;
-    text-shadow: 0 0 5px black;
-    font-size: 3em;
+  padding: 0.25em;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 0 2px black;
+  text-indent: 5px;
+  text-shadow: 0 0 5px black;
+  font-size: 3em;
 }
 
 body {
-    display: flex;
-    flex-direction:column;
-    height: 90vh;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    color: white;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
 }
 
 small {
-    font-size: 12px;
-    margin-top: 2em;
+  font-size: 12px;
+  margin-top: 2em;
 }
 
 small a {
-    text-decoration: none;
-    color: rgba(121, 204, 252, 0.507);
-    transition: 0.5s linear;
-    font-size: 10px;
+  text-decoration: none;
+  color: rgba(121, 204, 252, 0.507);
+  transition: 0.5s linear;
+  font-size: 10px;
 }
 
 small a:hover {
-    color: rgba(121, 204, 252, 1);
-    text-shadow: 0 0 5px rgba(167, 223, 255, 0.753);
+  color: rgba(121, 204, 252, 1);
+  text-shadow: 0 0 5px rgba(167, 223, 255, 0.753);
 }
 
 canvas {
-    box-shadow: 0 0 25px rgb(121, 204, 252);
-    border-radius: 30px;
-    /* helps with border-aliasing */
-    border: 1px solid transparent;
-
+  box-shadow: 0 0 25px rgb(121, 204, 252);
+  border-radius: 30px;
+  /* helps with border-aliasing */
+  border: 1px solid transparent;
 }
 
-
-
 @media (min-height: 300px) and (max-height: 600px) {
-    canvas {
-        width: 300px;
-    }
+  canvas {
+    width: 300px;
+  }
 
-    .header-container {
-        height: 3em;
-    }
-    h1 {
-        font-size: 2em;
-    }
+  .header-container {
+    height: 3em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
 }
 
 @media (min-height: 600px) and (max-height: 750px) {
-    canvas {
-        width: 340px;
-    }
+  canvas {
+    width: 340px;
+  }
 
-    .header-container {
-        height: 3em;
-    }
-    h1 {
-        font-size: 2em;
-    }
+  .header-container {
+    height: 3em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
 }
 
 @media (min-height: 750px) and (max-height: 900px) {
-    canvas {
-        width: 403px;
-    }
+  canvas {
+    width: 403px;
+  }
 
-    .header-container {
-        height: 3em;
-    }
-    h1 {
-        font-size: 2em;
-    }
+  .header-container {
+    height: 3em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
 }
 
 @media (min-height: 900px) {
-    canvas {
-        width: 448px;
-    }
+  canvas {
+    width: 448px;
+  }
 }
 
 @media (min-height: 1080px) {
-    canvas {
-        width: 560px;
-    }
+  canvas {
+    width: 560px;
+  }
 }
 
 @media (min-height: 1440px) {
-    canvas {
-        width: 784px;
-    }
+  canvas {
+    width: 784px;
+  }
 }

@@ -1,4 +1,4 @@
-export default class Pellet {
+export default class Energizer {
   x;
   y;
   radius;

@@ -2,18 +2,9 @@ import Player from './player.js';
 import Pellet from './pellet.js';
 import Wall from './wall.js';
 import Ghost from './ghost.js';
+import Energizer from './energizer.js';
 
 export default class GameState {
-    player;
-    ghosts;
-    #map;
-    walls;
-    pellets;
-    tunnels;
-    images;
-    debugMode;
-    ghostState;
-    ghostStates;
     constructor(canvas, debugMode) {
         this.map = [
             [0   , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0    , 0   , 0   , 0   , 0   , 0   , 0   , 0   , 0,  ],
@@ -70,10 +61,15 @@ export default class GameState {
         this.ghosts = [];
         this.walls = [];
         this.pellets = [];
+        this.energizers = [];
         this.tunnels = [];
         this.debugMode = debugMode;
         this.ghostState = 0;
         this.ghostStates = [
+            {
+              state: 'scatter',
+              time: 6999
+            },
             {
                 state: 'chase',
                 time: 7000
@@ -102,30 +98,37 @@ export default class GameState {
                 state: 'chase',
                 time: 84000
             }]
+          this.timeLastEnergized;
+          this.canvas = canvas;
 
         this.initializeMap(canvas);
     }
 
-    initializeMap(canvas) {
+    initializeMap() {
+      this.ghosts = [];
+      this.walls = [];
+      this.pellets = [];
+      this.energizers = [];
+      this.tunnels = [];
         this.map.forEach((row, ydx) => {
             row.forEach((tile, xdx) => {
-                let pixelSize = canvas.height / this.map.length;
+                let pixelSize = this.canvas.height / this.map.length;
                 if (typeof tile === "string") {
                     this.walls.push(new Wall(xdx * pixelSize, ydx * pixelSize, pixelSize, this.createImage(tile)));
                 } else if (tile === 1) {
-                    this.player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086);
+                    this.player = new Player(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085);
                 } else if (tile === 2) {
                     this.pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 8));
                 } else if (tile === 3) {
-                    this.pellets.push(new Pellet(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 4));
+                    this.energizers.push(new Energizer(xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 4));
                 } else if (tile === 4) {
-                    this.ghosts.push(new Ghost("Blinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                    this.ghosts.push(new Ghost("Blinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085, this.debugMode, this.canvas));
                 } else if (tile === 5) {
-                    this.ghosts.push(new Ghost("Pinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                    this.ghosts.push(new Ghost("Pinky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085, this.debugMode, this.canvas));
                 } else if (tile === 6) {
-                    this.ghosts.push(new Ghost("Clyde", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                    this.ghosts.push(new Ghost("Clyde", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085, this.debugMode, this.canvas));
                 } else if (tile === 7) {
-                    this.ghosts.push(new Ghost("Inky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.086, this.debugMode, canvas));
+                    this.ghosts.push(new Ghost("Inky", xdx * pixelSize + pixelSize / 2, ydx * pixelSize + pixelSize / 2, pixelSize / 2.085, this.debugMode, this.canvas));
                 } else if (tile === -1) {
                     this.tunnels.push({ x: xdx * pixelSize, y: ydx * pixelSize, start: true });
                 } else if (tile === -2) {
@@ -143,11 +146,46 @@ export default class GameState {
     }
 
     checkGhostStates(timeElapsed) {
-        if (this.ghostStates[this.ghostState].time <= timeElapsed) {
-            this.ghosts.forEach(ghost => {
-                ghost.setGhostState(this.ghostStates[this.ghostState].state);
-            });
+        if (this.ghostStates[this.ghostState].time <= timeElapsed && !this.energized) {
+            this.setGhostStates();
             if (this.ghostState < this.ghostStates.length - 1) this.ghostState++;
         }
+
+    }
+
+    setGhostStates() {
+      this.ghosts.forEach(ghost => {
+        ghost.setGhostState(this.ghostStates[this.ghostState].state);
+    });
+    }
+
+    energizer(time) {
+      let timeout;
+      if (this.energized) {
+        clearTimeout(timeout);
+
+        this.ghostStates.forEach(state => {
+          state.time += 8000 - (time - this.timeLastEnergized);
+        })
+        
+        this.timeLastEnergized = time;
+        timeout = setTimeout(() => {
+          this.energized = false; 
+          this.setGhostStates();
+        }, 8000);
+      } else {
+        this.energized = true;
+        this.timeLastEnergized = time;
+        this.ghosts.forEach(ghost => {
+            ghost.setGhostState("frightened");
+        });
+        this.ghostStates.forEach(state => {
+            state.time += 8000;
+        })
+        timeout = setTimeout(() => {
+          this.energized = false; 
+          this.setGhostStates();
+        }, 8000);
+      }
     }
 }
