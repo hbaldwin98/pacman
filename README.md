@@ -3,6 +3,8 @@ Pac-Man written in pure JavaScript. Contains generally replicated behavior from 
 
 Thanks to this great article for understanding the Ghost A.I. behavior: https://gameinternals.com/understanding-pac-man-ghost-behavior
 
+**Live:** https://hbaldwin98.github.io/pacman/
+
 ## Assets Used 
 - https://jack-studio.itch.io/pac-man-tiles
 - https://www.sounds-resource.com/arcade/pacman/sound/10603/
